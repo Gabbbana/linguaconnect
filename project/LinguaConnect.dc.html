@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&amp;display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; min-height: 100vh; display: flex; align-items: center; justify-content: center; background: #F0E9DD; padding: 32px; }
+  a { color: #E0674A; } a:hover { color: #C95A3F; }
+  @keyframes lc-pulse { 0% { transform: scale(1); opacity: .5; } 100% { transform: scale(2.05); opacity: 0; } }
+  @keyframes lc-wave { 0%, 100% { transform: scaleY(0.3); } 50% { transform: scaleY(1); } }
+</style>
+</helmet>
+<div style="display:flex;justify-content:center">
+<x-import component-from-global-scope="IOSDevice" from="./ios-frame.jsx" hint-size="402px,874px">
+<div style="height:100%;display:flex;flex-direction:column;position:relative;background:#FBF7F0;font-family:'Nunito',system-ui,sans-serif;color:#2E2823">
+
+  <!-- ============ WELCOME / LOGIN ============ -->
+  <sc-if value="{{ isWelcome }}" hint-placeholder-val="{{ true }}">
+    <div data-screen-label="Welcome / Login" style="flex:1;display:flex;flex-direction:column;padding:96px 28px 48px;box-sizing:border-box">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:14px">
+        <div style="display:flex;align-items:center">
+          <div style="width:46px;height:46px;border-radius:50%;background:#E0674A"></div>
+          <div style="width:46px;height:46px;border-radius:50%;background:#2E9C8A;margin-left:-16px;mix-blend-mode:multiply;opacity:.92"></div>
+        </div>
+        <div style="font-size:30px;font-weight:900;letter-spacing:-0.5px">LinguaConnect</div>
+        <div style="font-size:15.5px;font-weight:600;color:#8B8175;text-align:center;line-height:1.45;max-width:270px">Practice a language with real people, live — one call at a time.</div>
+        <div style="display:flex;align-items:center;gap:7px;background:#F1EBE0;border-radius:999px;padding:6px 14px;font-size:12.5px;font-weight:700;color:#6B6155">
+          <span style="width:8px;height:8px;border-radius:50%;background:#3FA34D;display:inline-block"></span>
+          1,247 people on calls right now
+        </div>
+      </div>
+      <div style="flex:1"></div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <input type="email" placeholder="Email" style="height:52px;border-radius:16px;border:1.5px solid rgba(46,40,35,0.14);background:#fff;padding:0 18px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;color:#2E2823;outline:none;box-sizing:border-box" style-focus="border-color:#E0674A">
+        <input type="password" placeholder="Password" style="height:52px;border-radius:16px;border:1.5px solid rgba(46,40,35,0.14);background:#fff;padding:0 18px;font-family:'Nunito',sans-serif;font-size:15px;font-weight:600;color:#2E2823;outline:none;box-sizing:border-box" style-focus="border-color:#E0674A">
+        <button onClick="{{ logIn }}" style="height:54px;border-radius:16px;border:none;background:#E0674A;color:#fff;font-family:'Nunito',sans-serif;font-size:16.5px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(224,103,74,0.28)" style-hover="background:#C95A3F" style-active="transform:scale(0.98)">Log in</button>
+        <button onClick="{{ logIn }}" style="height:44px;border-radius:16px;border:none;background:transparent;color:#8B8175;font-family:'Nunito',sans-serif;font-size:14px;font-weight:700;cursor:pointer" style-hover="color:#2E2823">New here? <span style="color:#E0674A">Create an account</span></button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ LANGUAGE SELECT ============ -->
+  <sc-if value="{{ isLanguage }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Language selection" style="flex:1;display:flex;flex-direction:column;padding:78px 0 0;box-sizing:border-box;min-height:0">
+      <div style="padding:0 24px 18px">
+        <div style="font-size:26px;font-weight:900;letter-spacing:-0.4px;line-height:1.2">What do you want to practice?</div>
+        <div style="font-size:14px;font-weight:600;color:#8B8175;margin-top:8px;line-height:1.45">Pick a language and we'll call someone who speaks it.</div>
+      </div>
+      <div style="flex:1;overflow:auto;padding:4px 24px 16px;min-height:0">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+          <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+            <div onClick="{{ l.select }}" style="display:flex;flex-direction:column;gap:10px;padding:16px 14px;border-radius:18px;background:{{ l.cardBg }};border:2px solid {{ l.cardBorder }};cursor:pointer;position:relative" style-hover="border-color:#E0674A">
+              <div style="width:40px;height:40px;border-radius:50%;background:{{ l.bg }};color:{{ l.fg }};display:flex;align-items:center;justify-content:center;font-size:13.5px;font-weight:900;letter-spacing:0.5px">{{ l.code }}</div>
+              <div>
+                <div style="font-size:15.5px;font-weight:800">{{ l.name }}</div>
+                <div style="display:flex;align-items:center;gap:5px;font-size:12px;font-weight:700;color:#8B8175;margin-top:2px">
+                  <span style="width:6px;height:6px;border-radius:50%;background:#3FA34D;display:inline-block"></span>
+                  {{ l.online }} online
+                </div>
+              </div>
+              <sc-if value="{{ l.selected }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;top:10px;right:10px;width:22px;height:22px;border-radius:50%;background:#E0674A;color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:900">✓</div>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+      <div style="padding:12px 24px 46px;background:#FBF7F0;box-shadow:0 -8px 16px rgba(251,247,240,0.9)">
+        <button onClick="{{ toMatch }}" style="width:100%;height:54px;border-radius:16px;border:none;background:{{ contBg }};color:{{ contColor }};font-family:'Nunito',sans-serif;font-size:16.5px;font-weight:800;cursor:pointer" style-active="transform:scale(0.98)">{{ contLabel }}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ ONLINE PARTNERS ============ -->
+  <sc-if value="{{ isMatch }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Online partners" style="flex:1;display:flex;flex-direction:column;padding:70px 0 0;box-sizing:border-box;min-height:0">
+      <div style="display:flex;align-items:center;gap:12px;padding:0 20px 4px">
+        <button onClick="{{ backToLang }}" style="width:36px;height:36px;border-radius:50%;border:1.5px solid rgba(46,40,35,0.14);background:#fff;color:#6B6155;font-size:19px;font-weight:800;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0 0 2px" style-hover="border-color:#E0674A;color:#E0674A">‹</button>
+        <div>
+          <div style="font-size:22px;font-weight:900;letter-spacing:-0.3px">Online now</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;color:#8B8175">
+            <span style="width:7px;height:7px;border-radius:50%;background:#3FA34D;display:inline-block"></span>
+            {{ selLang }} · {{ onlineCount }} people available
+          </div>
+        </div>
+      </div>
+      <div style="padding:14px 20px 6px">
+        <button onClick="{{ matchRandom }}" style="width:100%;height:52px;border-radius:16px;border:none;background:#2E9C8A;color:#fff;font-family:'Nunito',sans-serif;font-size:15.5px;font-weight:800;cursor:pointer;box-shadow:0 6px 16px rgba(46,156,138,0.25)" style-hover="background:#278779" style-active="transform:scale(0.98)">Call someone now</button>
+      </div>
+      <div style="flex:1;overflow:auto;padding:8px 20px 46px;min-height:0;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ users }}" as="u" hint-placeholder-count="4">
+          <div onClick="{{ u.connect }}" style="display:flex;align-items:center;gap:13px;padding:14px;border-radius:18px;background:#fff;border:1.5px solid rgba(46,40,35,0.09);cursor:pointer" style-hover="border-color:#E0674A;box-shadow:0 4px 14px rgba(46,40,35,0.06)">
+            <div style="position:relative;flex-shrink:0">
+              <div style="width:50px;height:50px;border-radius:50%;background:{{ u.avBg }};color:{{ u.avFg }};display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900">{{ u.initials }}</div>
+              <div style="position:absolute;bottom:0;right:0;width:13px;height:13px;border-radius:50%;background:#3FA34D;border:2.5px solid #fff"></div>
+            </div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:15.5px;font-weight:800">{{ u.name }}</div>
+              <div style="font-size:12px;font-weight:700;color:#8B8175;margin-top:1px">{{ u.city }}</div>
+              <div style="display:flex;gap:6px;margin-top:7px;flex-wrap:wrap">
+                <span style="font-size:11px;font-weight:800;color:#26786A;background:#DFF0EC;border-radius:999px;padding:3.5px 9px">Native English</span>
+                <span style="font-size:11px;font-weight:800;color:#6B6155;background:#F1EBE0;border-radius:999px;padding:3.5px 9px">Learning {{ u.learning }}</span>
+              </div>
+            </div>
+            <div style="flex-shrink:0;height:36px;border-radius:999px;background:#FDEFE9;color:#E0674A;font-size:13px;font-weight:800;display:flex;align-items:center;padding:0 15px">Call</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============ ACTIVE CALL ============ -->
+  <sc-if value="{{ isCall }}" hint-placeholder-val="{{ false }}">
+    <div data-screen-label="Voice call" style="flex:1;display:flex;flex-direction:column;align-items:center;padding:92px 26px 50px;box-sizing:border-box;min-height:0">
+      <div style="font-size:12px;font-weight:800;color:#8B8175;letter-spacing:1.2px;text-transform:uppercase">English practice call</div>
+      <div style="font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;margin-top:2px">{{ callTime }}</div>
+      <div style="flex:1"></div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:16px">
+        <div style="width:118px;height:118px;border-radius:50%;background:{{ partnerAvBg }};color:{{ partnerAvFg }};display:flex;align-items:center;justify-content:center;font-size:38px;font-weight:900;box-shadow:0 0 0 5px #FBF7F0, 0 0 0 8px #3FA34D">{{ partnerInitials }}</div>
+        <div style="text-align:center">
+          <div style="font-size:22px;font-weight:900">{{ partnerName }}</div>
+          <div style="font-size:13.5px;font-weight:700;color:#8B8175;margin-top:3px">{{ partnerCity }}</div>
+        </div>
+        <div style="display:flex;gap:6px">
+          <span style="font-size:11.5px;font-weight:800;color:#26786A;background:#DFF0EC;border-radius:999px;padding:4px 10px">Native English</span>
+          <span style="font-size:11.5px;font-weight:800;color:#6B6155;background:#F1EBE0;border-radius:999px;padding:4px 10px">Learning {{ partnerLearning }}</span>
+        </div>
+        {{ waveBars }}
+      </div>
+      <div style="flex:1"></div>
+      <div style="background:#F1EBE0;border-radius:14px;padding:11px 16px;font-size:12.5px;font-weight:700;color:#6B6155;text-align:center;line-height:1.5;max-width:300px">Ice-breaker: describe your favorite meal — in English.</div>
+      <div style="display:flex;gap:10px;width:100%;margin-top:20px">
+        <button onClick="{{ toggleMute }}" style="flex:1;height:50px;border-radius:16px;border:1.5px solid {{ muteBorder }};background:{{ muteBg }};color:{{ muteColor }};font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:800;cursor:pointer" style-active="transform:scale(0.97)">{{ muteLabel }}</button>
+        <button onClick="{{ toggleSpeaker }}" style="flex:1;height:50px;border-radius:16px;border:1.5px solid {{ spkBorder }};background:{{ spkBg }};color:{{ spkColor }};font-family:'Nunito',sans-serif;font-size:14.5px;font-weight:800;cursor:pointer" style-active="transform:scale(0.97)">{{ spkLabel }}</button>
+      </div>
+      <button onClick="{{ endCall }}" style="width:100%;height:54px;border-radius:16px;border:none;background:#D64545;color:#fff;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;margin-top:10px;box-shadow:0 6px 16px rgba(214,69,69,0.28)" style-hover="background:#BC3A3A" style-active="transform:scale(0.98)">End call</button>
+    </div>
+  </sc-if>
+
+  <!-- ============ CALLING OVERLAY ============ -->
+  <sc-if value="{{ isMatching }}" hint-placeholder-val="{{ false }}">
+    <div style="position:absolute;inset:0;z-index:40;background:rgba(251,247,240,0.97);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:26px">
+      {{ matchPulse }}
+      <div style="text-align:center">
+        <div style="font-size:19px;font-weight:900">Calling {{ partnerFirst }}…</div>
+        <div style="font-size:13.5px;font-weight:700;color:#8B8175;margin-top:6px">{{ partnerCity }} · Native English</div>
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;$preview&quot;: { &quot;width&quot;: 470, &quot;height&quot;: 940 },
+  &quot;startScreen&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;welcome&quot;, &quot;language&quot;, &quot;match&quot;, &quot;call&quot;], &quot;default&quot;: &quot;welcome&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Prototype behavior&quot; }
+}">
+class Component extends DCLogic {
+  state = { screen: null, lang: null, partner: null, matching: false, callSecs: 0, muted: false, speaker: false };
+
+  LANGS = [
+    { code: 'EN', name: 'English', online: '2,418', bg: '#DFE9F8', fg: '#3D6396' },
+    { code: 'ES', name: 'Spanish', online: '1,976', bg: '#FBE3D6', fg: '#B05A33' },
+  ];
+
+  USERS = [
+    { name: 'Maya Thompson', first: 'Maya', initials: 'MT', city: 'Toronto, Canada', learning: 'Spanish', avBg: '#FBE3D6', avFg: '#B05A33' },
+    { name: 'Liam O’Connor', first: 'Liam', initials: 'LO', city: 'Dublin, Ireland', learning: 'Spanish', avBg: '#DFE9F8', avFg: '#3D6396' },
+    { name: 'Aisha Patel', first: 'Aisha', initials: 'AP', city: 'Melbourne, Australia', learning: 'Portuguese', avBg: '#EBE3F2', avFg: '#71519E' },
+    { name: 'Emma Wilson', first: 'Emma', initials: 'EW', city: 'Austin, USA', learning: 'Japanese', avBg: '#DDF0E6', avFg: '#2F7D5B' },
+    { name: 'James Okafor', first: 'James', initials: 'JO', city: 'London, UK', learning: 'French', avBg: '#FADEE4', avFg: '#B04A64' },
+  ];
+
+  timers = [];
+  t(fn, ms) { this.timers.push(setTimeout(fn, ms)); }
+  componentWillUnmount() {
+    this.timers.forEach(clearTimeout);
+    if (this.callInt) clearInterval(this.callInt);
+  }
+
+  getScreen() { return this.state.screen ?? this.props.startScreen ?? 'welcome'; }
+  getPartner() { return this.state.partner ?? this.USERS[0]; }
+
+  syncCallTimer() {
+    const inCall = this.getScreen() === 'call' && !this.state.matching;
+    if (inCall && !this.callInt) {
+      this.callInt = setInterval(() => this.setState(s => ({ callSecs: s.callSecs + 1 })), 1000);
+    } else if (!inCall && this.callInt) {
+      clearInterval(this.callInt);
+      this.callInt = null;
+    }
+  }
+  componentDidMount() { this.syncCallTimer(); }
+  componentDidUpdate() { this.syncCallTimer(); }
+
+  connectWith(u) {
+    this.setState({ partner: u, matching: true });
+    this.t(() => this.setState({ matching: false, screen: 'call', callSecs: 0, muted: false, speaker: false }), 1700);
+  }
+
+  endCall() {
+    if (this.callInt) { clearInterval(this.callInt); this.callInt = null; }
+    this.setState({ screen: 'match', callSecs: 0, muted: false, speaker: false });
+  }
+
+  waves() {
+    this._waves = this._waves || React.createElement('div', { style: { display: 'flex', gap: 5, alignItems: 'center', height: 30, marginTop: 4 } },
+      [0, 1, 2, 3, 4].map(i => React.createElement('span', {
+        key: i,
+        style: { width: 6, height: 26, borderRadius: 3, background: '#2E9C8A', display: 'inline-block', transformOrigin: 'center', animation: 'lc-wave 1s ease-in-out infinite', animationDelay: (i * 0.13) + 's' },
+      })));
+    return this._waves;
+  }
+
+  pulse(p) {
+    if (this._pulseFor !== p.name) {
+      this._pulseFor = p.name;
+      const ring = (delay) => React.createElement('div', {
+        key: delay,
+        style: { position: 'absolute', inset: 0, borderRadius: '50%', border: '2.5px solid #E0674A', animation: 'lc-pulse 1.7s ease-out infinite', animationDelay: delay + 's' },
+      });
+      this._pulse = React.createElement('div', { style: { position: 'relative', width: 96, height: 96 } },
+        ring(0), ring(0.85),
+        React.createElement('div', {
+          style: { position: 'absolute', inset: 0, borderRadius: '50%', background: p.avBg, color: p.avFg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 30, fontWeight: 900 },
+        }, p.initials));
+    }
+    return this._pulse;
+  }
+
+  renderVals() {
+    const screen = this.getScreen();
+    const p = this.getPartner();
+    const hasLang = !!this.state.lang;
+    const selLang = this.state.lang ?? 'English';
+    const langInfo = this.LANGS.find(l => l.name === selLang);
+    const secs = this.state.callSecs;
+    const mm = String(Math.floor(secs / 60)).padStart(2, '0');
+    const ss = String(secs % 60).padStart(2, '0');
+
+    return {
+      isWelcome: screen === 'welcome',
+      isLanguage: screen === 'language',
+      isMatch: screen === 'match',
+      isCall: screen === 'call',
+      isMatching: this.state.matching,
+
+      logIn: () => this.setState({ screen: 'language' }),
+      toMatch: () => { if (hasLang) this.setState({ screen: 'match' }); },
+      backToLang: () => this.setState({ screen: 'language' }),
+      matchRandom: () => this.connectWith(this.USERS[Math.floor(Math.random() * this.USERS.length)]),
+
+      langs: this.LANGS.map(l => ({
+        ...l,
+        selected: l.name === this.state.lang,
+        select: () => this.setState({ lang: l.name }),
+        cardBg: l.name === this.state.lang ? '#FDEFE9' : '#FFFFFF',
+        cardBorder: l.name === this.state.lang ? '#E0674A' : 'rgba(46,40,35,0.1)',
+      })),
+      contBg: hasLang ? '#E0674A' : '#E8E1D5',
+      contColor: hasLang ? '#FFFFFF' : '#A99F91',
+      contLabel: hasLang ? 'Find partners' : 'Pick a language to continue',
+
+      selLang,
+      onlineCount: langInfo ? langInfo.online : '—',
+      users: this.USERS.map(u => ({ ...u, connect: () => this.connectWith(u) })),
+
+      partnerName: p.name,
+      partnerFirst: p.first,
+      partnerCity: p.city,
+      partnerInitials: p.initials,
+      partnerAvBg: p.avBg,
+      partnerAvFg: p.avFg,
+      partnerLearning: p.learning,
+
+      callTime: mm + ':' + ss,
+      waveBars: this.waves(),
+      matchPulse: this.pulse(p),
+
+      toggleMute: () => this.setState(s => ({ muted: !s.muted })),
+      muteLabel: this.state.muted ? 'Unmute' : 'Mute',
+      muteBg: this.state.muted ? '#2E2823' : '#FFFFFF',
+      muteColor: this.state.muted ? '#FFFFFF' : '#2E2823',
+      muteBorder: this.state.muted ? '#2E2823' : 'rgba(46,40,35,0.16)',
+
+      toggleSpeaker: () => this.setState(s => ({ speaker: !s.speaker })),
+      spkLabel: this.state.speaker ? 'Speaker on' : 'Speaker',
+      spkBg: this.state.speaker ? '#2E2823' : '#FFFFFF',
+      spkColor: this.state.speaker ? '#FFFFFF' : '#2E2823',
+      spkBorder: this.state.speaker ? '#2E2823' : 'rgba(46,40,35,0.16)',
+
+      endCall: () => this.endCall(),
+    };
+  }
+}
+</script>
+</body>
+</html>
