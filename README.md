@@ -1,5 +1,9 @@
 # LinguaConnect
 
+## Interactive frontend prototype
+
+A self-contained demo is available for evaluating the redesigned frontend before backend integration. Run `npm --prefix client ci` and `npm --prefix client run dev:demo` from the repository root. See [PROTOTYPE.md](PROTOTYPE.md) for flows, limitations, testing, and integration notes.
+
 A language exchange app inspired by Tandem: log in, pick a language you want
 to practice, and get matched instantly with another online user who wants to
 practice the same language — then talk over a real live voice call.
@@ -93,3 +97,4 @@ chats/    Original design conversation transcript — reference only
 Note: the prototype's design-tool runtime (`support.js`) and the earlier
 text-chat backup file from the original handoff bundle are not included
 here, so the prototype HTML is for reading, not rendering.
+

@@ -17,7 +17,7 @@ function formatTime(secs: number) {
 export function CallScreen({ matched, onEnded }: { matched: Matched; onEnded: () => void }) {
   const { endCall } = useRealtime();
   const { remoteAudioRef, muted, toggleMute, connectionState, mediaError } = useWebRTCCall(matched);
-  const [speaker, setSpeaker] = useState(false);
+  const [timedOut, setTimedOut] = useState(false);
   const [callSecs, setCallSecs] = useState(0);
   const connectedOnceRef = useRef(false);
 
@@ -40,13 +40,19 @@ export function CallScreen({ matched, onEnded }: { matched: Matched; onEnded: ()
     }
   }, [connectionState]);
 
+  useEffect(() => {
+    if (isConnected || mediaError || connectedOnceRef.current) return;
+    const timer = setTimeout(() => setTimedOut(true), 20000);
+    return () => clearTimeout(timer);
+  }, [isConnected, mediaError]);
+
   function handleEndCall() {
     endCall(matched.roomId);
     onEnded();
   }
 
   const { peer } = matched;
-  const showOverlay = !isConnected && !connectedOnceRef.current;
+  const showOverlay = !isConnected && !connectedOnceRef.current && !mediaError && !timedOut;
 
   return (
     <div
@@ -96,9 +102,9 @@ export function CallScreen({ matched, onEnded }: { matched: Matched; onEnded: ()
 
       <div style={{ flex: 1 }} />
 
-      {mediaError ? (
+      {mediaError || timedOut ? (
         <div style={{ background: '#FDEFE9', borderRadius: 14, padding: '11px 16px', fontSize: 12.5, fontWeight: 700, color: colors.dangerHover, textAlign: 'center', lineHeight: 1.5, maxWidth: 300 }}>
-          Couldn't access your microphone: {mediaError}
+          {mediaError ? `Couldn't access your microphone: ${mediaError}` : 'The call could not connect. End this call and try another partner.'}
         </div>
       ) : (
         <div style={{ background: colors.cardTint, borderRadius: 14, padding: '11px 16px', fontSize: 12.5, fontWeight: 700, color: colors.textMuted2, textAlign: 'center', lineHeight: 1.5, maxWidth: 300 }}>
@@ -123,22 +129,9 @@ export function CallScreen({ matched, onEnded }: { matched: Matched; onEnded: ()
         >
           {muted ? 'Unmute' : 'Mute'}
         </button>
-        <button
-          onClick={() => setSpeaker((s) => !s)}
-          style={{
-            flex: 1,
-            height: 50,
-            borderRadius: 16,
-            border: `1.5px solid ${speaker ? colors.text : colors.toggleBorder}`,
-            background: speaker ? colors.text : '#FFFFFF',
-            color: speaker ? '#FFFFFF' : colors.text,
-            fontSize: 14.5,
-            fontWeight: 800,
-            cursor: 'pointer',
-          }}
-        >
-          {speaker ? 'Speaker on' : 'Speaker'}
-        </button>
+        <p style={{ fontSize: 12, color: colors.textMuted, flex: 1, textAlign: 'center' }}>
+          Adjust audio output using your device controls.
+        </p>
       </div>
       <button
         onClick={handleEndCall}
@@ -180,8 +173,10 @@ export function CallScreen({ matched, onEnded }: { matched: Matched; onEnded: ()
               {peer.city ?? 'Location not shared'} · Native {peer.nativeLanguage}
             </div>
           </div>
+          <button onClick={handleEndCall} style={{ border: '1px solid #C95A3F', background: '#fff', color: '#C95A3F', padding: '12px 24px', borderRadius: 10, cursor: 'pointer' }}>Cancel call</button>
         </div>
       )}
     </div>
   );
 }
+
