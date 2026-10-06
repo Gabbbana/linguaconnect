@@ -1,0 +1,10 @@
+{
+  "name": "linguaconnect-workspace",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npm --prefix client run dev -- --host 0.0.0.0 --port 4173 --mode demo",
+    "build": "npm --prefix client run build:demo && node scripts/stage-prototype.mjs",
+    "test:prototype": "node scripts/test-prototype.mjs"
+  }
+}

@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build:demo": "tsc --noEmit && vite build --mode demo",
+    "dev:demo": "vite --mode demo"
   },
   "dependencies": {
     "react": "^18.3.1",
